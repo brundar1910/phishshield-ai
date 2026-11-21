@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PhishShield AI Inspector</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <span class="shield-icon">&#x1F6E1;</span>
+      <div>
+        <span class="title">PhishShield AI</span>
+        <div class="subtitle">Real-time Browser Defense</div>
+      </div>
+    </div>
+    <span id="status-dot" class="dot green" title="Backend Online"></span>
+  </div>
+
+  <!-- Active Tab Card -->
+  <div class="card">
+    <div class="card-label">ACTIVE TAB DESTINATION</div>
+    <div id="url-display" class="url-text">Querying active browser tab...</div>
+  </div>
+
+  <!-- Risk Score & Verdict Box -->
+  <div class="card result-card">
+    <div class="threat-header">
+      <div>
+        <div class="metric-label">SECURITY VERDICT</div>
+        <div id="verdict-badge" class="badge low">ANALYZING...</div>
+      </div>
+      <div class="score-container">
+        <div class="metric-label">THREAT SCORE</div>
+        <div id="risk-score-text" class="score">--</div>
+      </div>
+    </div>
+    <div class="progress-bar-bg">
+      <div id="threat-progress" class="progress-bar" style="width: 0%;"></div>
+    </div>
+    <div id="explanation-text" class="explanation-text">
+      Inspecting lexical structure and ML features...
+    </div>
+  </div>
+
+  <!-- Security Heuristics Detected -->
+  <div class="card">
+    <div class="card-label">TRIGGERED SECURITY SIGNALS</div>
+    <ul id="flags-list" class="flags-list">
+      <li class="flag-item">Awaiting scan...</li>
+    </ul>
+  </div>
+
+  <!-- Feature Inspector Toggle -->
+  <details class="features-accordion">
+    <summary>Inspect 29 ML Engineered Features</summary>
+    <div id="features-grid" class="features-grid">
+      <span class="text-muted">Perform scan to load features.</span>
+    </div>
+  </details>
+
+  <!-- Manual Scan Input -->
+  <div class="manual-scan-box">
+    <input id="manual-url-input" type="text" placeholder="Or test custom URL..." />
+    <button id="manual-scan-btn">Scan</button>
+  </div>
+
+  <!-- Action Footer -->
+  <div class="footer-actions">
+    <button id="rescan-btn" class="btn primary">Re-Scan Active Tab</button>
+    <a href="http://localhost:8000/dashboard/Dashboard.html" target="_blank" class="btn secondary">Open Dashboard</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

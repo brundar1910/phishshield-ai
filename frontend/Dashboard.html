@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishShield AI — Enterprise Phishing Defense Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .tab-btn.active {
+      background-color: #0284c7 !important;
+      color: #ffffff !important;
+      border-color: #38bdf8 !important;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <span class="text-2xl">&#x1F6E1;</span>
+        <div>
+          <span class="text-lg font-bold tracking-wider text-sky-400">PHISHSHIELD <span class="text-slate-400">AI</span></span>
+          <span class="text-xs text-slate-500 ml-2 hidden sm:inline">Multi-Modal Threat Defense System</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4 text-xs font-semibold">
+        <span id="backend-status" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+          <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span> Checking API...
+        </span>
+        <a href="/docs" target="_blank" class="text-slate-400 hover:text-white transition bg-slate-800 px-3 py-1 rounded border border-slate-700">API Docs</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+    <!-- Navigation Tabs -->
+    <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
+      <button class="tab-btn active px-4 py-2 rounded-lg text-xs font-bold bg-slate-900 border border-slate-800 hover:bg-slate-800 transition cursor-pointer" data-tab="tab-url">
+        🔗 URL Threat Scanner
+      </button>
+      <button class="tab-btn px-4 py-2 rounded-lg text-xs font-bold bg-slate-900 border border-slate-800 hover:bg-slate-800 transition cursor-pointer" data-tab="tab-email">
+        ✉️ Email & Text NLP
+      </button>
+      <button class="tab-btn px-4 py-2 rounded-lg text-xs font-bold bg-slate-900 border border-slate-800 hover:bg-slate-800 transition cursor-pointer" data-tab="tab-html">
+        📄 HTML / DOM Inspector
+      </button>
+      <button class="tab-btn px-4 py-2 rounded-lg text-xs font-bold bg-slate-900 border border-slate-800 hover:bg-slate-800 transition cursor-pointer" data-tab="tab-image">
+        🖼️ Screenshot / Image
+      </button>
+      <button class="tab-btn px-4 py-2 rounded-lg text-xs font-bold bg-slate-900 border border-slate-800 hover:bg-slate-800 transition cursor-pointer" data-tab="tab-stats">
+        📊 Analytics & Stats
+      </button>
+      <button class="tab-btn px-4 py-2 rounded-lg text-xs font-bold bg-slate-900 border border-slate-800 hover:bg-slate-800 transition cursor-pointer" data-tab="tab-models">
+        🤖 ML Benchmarks
+      </button>
+      <button class="tab-btn px-4 py-2 rounded-lg text-xs font-bold bg-slate-900 border border-slate-800 hover:bg-slate-800 transition cursor-pointer" data-tab="tab-history">
+        📜 Audit Logs
+      </button>
+    </div>
+
+    <!-- TAB 1: URL SCANNER -->
+    <div id="tab-url" class="tab-content space-y-6">
+      <section class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+        <h2 class="text-lg font-bold text-slate-100 mb-1">Live URL Security & ML Classifier</h2>
+        <p class="text-slate-400 text-xs mb-4">Extracts 29 engineered features and evaluates through Logistic Regression, Random Forest, XGBoost, and heuristic signatures.</p>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input 
+            id="url-input" 
+            type="text" 
+            placeholder="Enter target URL (e.g. http://192.168.1.100/paypal/login.php?verification=token)" 
+            class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-sky-500"
+            value="http://192.168.1.100/paypal/login.php?verification=token"
+          />
+          <button id="url-scan-btn" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition cursor-pointer">
+            Scan URL
+          </button>
+        </div>
+
+        <!-- Sample Presets -->
+        <div class="flex flex-wrap items-center gap-2 mt-3 text-xs text-slate-400">
+          <span>Quick test presets:</span>
+          <button class="preset-btn px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-sky-400 font-mono text-[11px] cursor-pointer" data-url="http://192.168.1.100/paypal/login.php?verification=token">Phish: IP Address</button>
+          <button class="preset-btn px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-sky-400 font-mono text-[11px] cursor-pointer" data-url="http://secure-account-verify.login.xyz/banking/token">Phish: Deceptive TLD</button>
+          <button class="preset-btn px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-sky-400 font-mono text-[11px] cursor-pointer" data-url="https://bit.ly/3xY9Qz">Phish: URL Shortener</button>
+          <button class="preset-btn px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-emerald-400 font-mono text-[11px] cursor-pointer" data-url="https://www.google.com/search?q=cybersecurity">Benign: Google</button>
+          <button class="preset-btn px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-emerald-400 font-mono text-[11px] cursor-pointer" data-url="https://github.com/torvalds/linux">Benign: GitHub</button>
+        </div>
+
+        <!-- Result Box -->
+        <div id="url-result-box" class="mt-6 hidden border border-slate-800 rounded-lg p-5 bg-slate-950/80">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <div class="text-[10px] text-slate-400 font-bold mb-1 tracking-wider uppercase">Security Verdict</div>
+              <div id="url-verdict-badge"></div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-slate-400 font-bold mb-1 tracking-wider uppercase">Calibrated Threat Score</div>
+              <div id="url-risk-score" class="text-2xl font-mono font-extrabold text-slate-100">0/100</div>
+            </div>
+          </div>
+
+          <div class="mt-4 p-3 bg-slate-900/60 rounded border border-slate-800">
+            <div class="text-[11px] font-bold text-slate-300 mb-1">Human-Readable Explanation:</div>
+            <p id="url-explanation" class="text-xs text-slate-300 leading-relaxed"></p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            <div>
+              <h3 class="text-xs font-bold text-slate-300 mb-2">Triggered Security Signals</h3>
+              <ul id="url-flags-list" class="space-y-1.5 text-xs text-slate-400"></ul>
+            </div>
+            <div>
+              <h3 class="text-xs font-bold text-slate-300 mb-2">Extracted 29-Feature Vector</h3>
+              <div id="url-features-list" class="max-h-60 overflow-y-auto font-mono text-[11px] text-slate-400 bg-slate-900 p-3 rounded border border-slate-800 space-y-1"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 2: EMAIL SCANNER -->
+    <div id="tab-email" class="tab-content hidden space-y-6">
+      <section class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+        <h2 class="text-lg font-bold text-slate-100 mb-1">Email & Phishing Text Analyzer</h2>
+        <p class="text-slate-400 text-xs mb-4">Analyzes communications for urgency triggers, credential harvesting prompts, and extracts/scans embedded links.</p>
+
+        <div class="space-y-3">
+          <input id="email-subject" type="text" placeholder="Subject (e.g. URGENT: Your PayPal Account Has Been Suspended)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-sky-500" value="URGENT: Your account has been suspended within 24 hours" />
+          <textarea id="email-body" rows="4" placeholder="Email body content..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-4 text-xs font-mono text-slate-200 focus:outline-none focus:border-sky-500">Security Alert: We detected unauthorized activity on your account. Action required immediately within 24 hours to avoid permanent suspension. Please update your billing credentials and confirm your password at http://192.168.1.100/paypal/login.php?verification=token</textarea>
+          <button id="email-scan-btn" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition cursor-pointer">
+            Analyze Email
+          </button>
+        </div>
+
+        <!-- Email Result -->
+        <div id="email-result-box" class="mt-6 hidden border border-slate-800 rounded-lg p-5 bg-slate-950/80">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <div class="text-[10px] text-slate-400 font-bold mb-1 uppercase">Email Verdict</div>
+              <div id="email-verdict-badge"></div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-slate-400 font-bold mb-1 uppercase">Risk Score</div>
+              <div id="email-risk-score" class="text-2xl font-mono font-extrabold text-slate-100">0/100</div>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-slate-900/60 rounded border border-slate-800">
+            <div class="text-[11px] font-bold text-slate-300 mb-1">NLP Security Assessment:</div>
+            <p id="email-explanation" class="text-xs text-slate-300"></p>
+          </div>
+          <div class="mt-4 space-y-3">
+            <div>
+              <div class="text-xs font-bold text-slate-300 mb-1">Embedded Links Scanned:</div>
+              <div id="email-embedded-urls" class="space-y-1 text-xs"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 3: HTML SCANNER -->
+    <div id="tab-html" class="tab-content hidden space-y-6">
+      <section class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+        <h2 class="text-lg font-bold text-slate-100 mb-1">HTML DOM & Credential Form Inspector</h2>
+        <p class="text-slate-400 text-xs mb-4">Inspects forms submitting over unencrypted HTTP, external action endpoints, hidden iframes, and deceptive anchor links.</p>
+
+        <div class="space-y-3">
+          <input id="html-base-url" type="text" placeholder="Base Host URL (optional, e.g. http://my-bank-portal.com)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-sky-500" value="http://legitimate-looking-bank.com" />
+          <textarea id="html-content" rows="6" placeholder="Paste HTML markup here..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-4 text-xs font-mono text-slate-200 focus:outline-none focus:border-sky-500">&lt;form action="http://malicious-harvester.xyz/steal.php" method="POST"&gt;
+  &lt;h2&gt;Sign in to your account&lt;/h2&gt;
+  &lt;input type="text" name="username" placeholder="Username" /&gt;
+  &lt;input type="password" name="password" placeholder="Password" /&gt;
+  &lt;button type="submit"&gt;Login&lt;/button&gt;
+&lt;/form&gt;
+&lt;iframe src="http://hidden-tracker.cc" style="display:none;"&gt;&lt;/iframe&gt;
+&lt;a href="http://evil-site.top"&gt;https://www.paypal.com&lt;/a&gt;</textarea>
+          <button id="html-scan-btn" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition cursor-pointer">
+            Inspect HTML
+          </button>
+        </div>
+
+        <div id="html-result-box" class="mt-6 hidden border border-slate-800 rounded-lg p-5 bg-slate-950/80">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <div class="text-[10px] text-slate-400 font-bold mb-1 uppercase">DOM Verdict</div>
+              <div id="html-verdict-badge"></div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-slate-400 font-bold mb-1 uppercase">Risk Score</div>
+              <div id="html-risk-score" class="text-2xl font-mono font-extrabold text-slate-100">0/100</div>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-slate-900/60 rounded border border-slate-800">
+            <p id="html-explanation" class="text-xs text-slate-300"></p>
+          </div>
+          <div class="mt-4">
+            <div class="text-xs font-bold text-slate-300 mb-1">DOM Flags Triggered:</div>
+            <ul id="html-flags-list" class="space-y-1 text-xs text-slate-400"></ul>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 4: IMAGE SCANNER -->
+    <div id="tab-image" class="tab-content hidden space-y-6">
+      <section class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+        <h2 class="text-lg font-bold text-slate-100 mb-1">Screenshot & Visual Phishing Analyzer</h2>
+        <p class="text-slate-400 text-xs mb-4">Inspects webpage screenshots and logos using OpenCV/PIL image processing for credential overlay forms.</p>
+
+        <div class="space-y-3">
+          <input id="image-file-input" type="file" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-sky-600 file:text-white hover:file:bg-sky-500" />
+          <button id="image-scan-btn" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition cursor-pointer">
+            Analyze Image
+          </button>
+        </div>
+
+        <div id="image-result-box" class="mt-6 hidden border border-slate-800 rounded-lg p-5 bg-slate-950/80">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <div class="text-[10px] text-slate-400 font-bold mb-1 uppercase">Visual Verdict</div>
+              <div id="image-verdict-badge"></div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-slate-400 font-bold mb-1 uppercase">Visual Risk Score</div>
+              <div id="image-risk-score" class="text-2xl font-mono font-extrabold text-slate-100">0/100</div>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-slate-900/60 rounded border border-slate-800">
+            <p id="image-explanation" class="text-xs text-slate-300"></p>
+          </div>
+          <div id="image-meta" class="mt-4 text-xs text-slate-400 space-y-1"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 5: STATS -->
+    <div id="tab-stats" class="tab-content hidden space-y-6">
+      <section class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+        <h2 class="text-lg font-bold text-slate-100 mb-1">Real-Time Threat Intelligence & Database Metrics</h2>
+        <p class="text-slate-400 text-xs mb-6">Aggregated security metrics computed dynamically from SQLite scan logs.</p>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-slate-950 border border-slate-800 rounded-lg p-4">
+            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Total Scans</div>
+            <div id="stat-total" class="text-2xl font-mono font-extrabold text-sky-400 mt-1">0</div>
+          </div>
+          <div class="bg-slate-950 border border-slate-800 rounded-lg p-4">
+            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Avg Risk Score</div>
+            <div id="stat-avg-score" class="text-2xl font-mono font-extrabold text-amber-400 mt-1">0.0</div>
+          </div>
+          <div class="bg-slate-950 border border-slate-800 rounded-lg p-4">
+            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">High / Critical Threats</div>
+            <div id="stat-threats" class="text-2xl font-mono font-extrabold text-rose-400 mt-1">0</div>
+          </div>
+          <div class="bg-slate-950 border border-slate-800 rounded-lg p-4">
+            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Safe Detections</div>
+            <div id="stat-safe" class="text-2xl font-mono font-extrabold text-emerald-400 mt-1">0</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div class="bg-slate-950 border border-slate-800 rounded-lg p-4">
+            <h3 class="text-xs font-bold text-slate-300 mb-3">Verdict Breakdown</h3>
+            <div id="verdict-breakdown-bars" class="space-y-2 text-xs"></div>
+          </div>
+          <div class="bg-slate-950 border border-slate-800 rounded-lg p-4">
+            <h3 class="text-xs font-bold text-slate-300 mb-3">Top Triggered Heuristics</h3>
+            <div id="top-heuristics-list" class="space-y-2 text-xs text-slate-400"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 6: ML BENCHMARKS -->
+    <div id="tab-models" class="tab-content hidden space-y-6">
+      <section class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+        <h2 class="text-lg font-bold text-slate-100 mb-1">Trained Machine Learning Model Benchmarks</h2>
+        <p class="text-slate-400 text-xs mb-4">Verified evaluation metrics loaded from <code class="text-sky-300">/api/metrics</code> (evaluated on isolated 300-URL test set).</p>
+        <div id="metrics-table-container"></div>
+      </section>
+    </div>
+
+    <!-- TAB 7: HISTORY -->
+    <div id="tab-history" class="tab-content hidden space-y-6">
+      <section class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-100">Audit & Scan History Log</h2>
+            <p class="text-slate-400 text-xs">Persistent inspection records from SQLite database.</p>
+          </div>
+          <button id="refresh-history-btn" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded transition cursor-pointer">
+            Refresh
+          </button>
+        </div>
+        <div id="history-container" class="overflow-x-auto"></div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Robust Base URL detection: works seamlessly on localhost:8000, 127.0.0.1, reverse proxies, and file://
+    const BASE_API = window.location.protocol.startsWith("http") ? "" : "http://localhost:8000";
+
+    // API Helpers using pure fetch and relative paths
+    async function apiRequest(endpoint, options = {}) {
+      const url = `${BASE_API}${endpoint}`;
+      const res = await fetch(url, options);
+      if (!res.ok) {
+        let errMsg = `HTTP ${res.status}`;
+        try {
+          const errData = await res.json();
+          if (errData && errData.detail) errMsg = errData.detail;
+        } catch (_) {}
+        throw new Error(errMsg);
+      }
+      return res.json();
+    }
+
+    async function scanURL(url, includeFeatures = true) {
+      return apiRequest("/api/scan/url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: url, include_features: includeFeatures })
+      });
+    }
+
+    async function scanEmail(subject, body, sender = "") {
+      return apiRequest("/api/scan/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject: subject, body: body, sender: sender })
+      });
+    }
+
+    async function scanHTML(html_content, base_url = "") {
+      return apiRequest("/api/scan/html", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ html_content: html_content, base_url: base_url })
+      });
+    }
+
+    async function scanImage(file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      return apiRequest("/api/scan/image", {
+        method: "POST",
+        body: formData
+      });
+    }
+
+    async function fetchStats() {
+      return apiRequest("/api/stats");
+    }
+
+    async function fetchMetrics() {
+      return apiRequest("/api/metrics");
+    }
+
+    async function fetchScanHistory(limit = 25) {
+      return apiRequest(`/api/history?limit=${limit}`);
+    }
+
+    async function fetchHealth() {
+      return apiRequest("/api/health");
+    }
+
+    function renderVerdictBadge(verdict) {
+      const v = (verdict || "LOW").toUpperCase();
+      if (v === "CRITICAL") {
+        return `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-red-950 text-red-400 border border-red-700">CRITICAL THREAT</span>`;
+      } else if (v === "HIGH") {
+        return `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-rose-950 text-rose-400 border border-rose-700">HIGH RISK</span>`;
+      } else if (v === "MEDIUM") {
+        return `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-amber-950 text-amber-400 border border-amber-700">MEDIUM RISK</span>`;
+      } else {
+        return `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-950 text-emerald-400 border border-emerald-700">LOW RISK (SAFE)</span>`;
+      }
+    }
+
+    // Attach Event Listeners on DOM Ready
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Tab Switching
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const targetId = btn.getAttribute("data-tab");
+          tabBtns.forEach(b => b.classList.remove("active"));
+          tabContents.forEach(c => c.classList.add("hidden"));
+          btn.classList.add("active");
+
+          const targetContent = document.getElementById(targetId);
+          if (targetContent) {
+            targetContent.classList.remove("hidden");
+          }
+
+          if (targetId === "tab-stats") loadStats();
+          if (targetId === "tab-models") loadMetrics();
+          if (targetId === "tab-history") loadHistory();
+        });
+      });
+
+      // 2. Preset Buttons
+      document.querySelectorAll(".preset-btn").forEach(b => {
+        b.addEventListener("click", () => {
+          const targetUrl = b.getAttribute("data-url");
+          const input = document.getElementById("url-input");
+          if (input && targetUrl) {
+            input.value = targetUrl;
+          }
+        });
+      });
+
+      // 3. URL Scan
+      const urlScanBtn = document.getElementById("url-scan-btn");
+      if (urlScanBtn) {
+        urlScanBtn.addEventListener("click", async () => {
+          const input = document.getElementById("url-input");
+          const url = (input ? input.value : "").trim();
+          if (!url) return;
+
+          urlScanBtn.textContent = "Scanning...";
+          urlScanBtn.disabled = true;
+
+          try {
+            const res = await scanURL(url, true);
+            const resBox = document.getElementById("url-result-box");
+            if (resBox) resBox.classList.remove("hidden");
+
+            const vBadge = document.getElementById("url-verdict-badge");
+            if (vBadge) vBadge.innerHTML = renderVerdictBadge(res.verdict);
+
+            const rScore = document.getElementById("url-risk-score");
+            if (rScore) rScore.textContent = `${res.risk_score}/100`;
+
+            const rExp = document.getElementById("url-explanation");
+            if (rExp) rExp.textContent = res.explanation;
+
+            const flagsContainer = document.getElementById("url-flags-list");
+            if (flagsContainer) {
+              flagsContainer.innerHTML = "";
+              if (!res.heuristic_flags || res.heuristic_flags.length === 0) {
+                flagsContainer.innerHTML = `<li class="text-emerald-400">✓ No anomalous heuristics detected.</li>`;
+              } else {
+                res.heuristic_flags.forEach(f => {
+                  flagsContainer.innerHTML += `<li class="text-rose-400">⚠️ ${f}</li>`;
+                });
+              }
+            }
+
+            const featuresContainer = document.getElementById("url-features-list");
+            if (featuresContainer && res.features) {
+              featuresContainer.innerHTML = Object.entries(res.features).map(([k, v]) => `
+                <div class="flex justify-between border-b border-slate-800/60 pb-0.5">
+                  <span class="text-sky-300">${k}</span>
+                  <span class="text-slate-200">${v}</span>
+                </div>
+              `).join("");
+            }
+          } catch (err) {
+            alert("URL Scan Error: " + err.message);
+          } finally {
+            urlScanBtn.textContent = "Scan URL";
+            urlScanBtn.disabled = false;
+          }
+        });
+      }
+
+      // 4. Email Scan
+      const emailScanBtn = document.getElementById("email-scan-btn");
+      if (emailScanBtn) {
+        emailScanBtn.addEventListener("click", async () => {
+          const subject = (document.getElementById("email-subject")?.value || "").trim();
+          const body = (document.getElementById("email-body")?.value || "").trim();
+          if (!body) return;
+
+          emailScanBtn.textContent = "Analyzing...";
+          emailScanBtn.disabled = true;
+
+          try {
+            const res = await scanEmail(subject, body);
+            document.getElementById("email-result-box")?.classList.remove("hidden");
+            document.getElementById("email-verdict-badge").innerHTML = renderVerdictBadge(res.verdict);
+            document.getElementById("email-risk-score").textContent = `${res.risk_score}/100`;
+            document.getElementById("email-explanation").textContent = res.explanation;
+
+            const urlsContainer = document.getElementById("email-embedded-urls");
+            if (urlsContainer) {
+              urlsContainer.innerHTML = "";
+              if (!res.embedded_urls || res.embedded_urls.length === 0) {
+                urlsContainer.innerHTML = "<p class='text-slate-400 text-xs'>No embedded hyperlinks detected.</p>";
+              } else {
+                res.embedded_urls.forEach(u => {
+                  urlsContainer.innerHTML += `
+                    <div class="p-2 bg-slate-900 border border-slate-800 rounded flex justify-between items-center">
+                      <span class="font-mono text-xs truncate max-w-sm text-slate-300">${u.url}</span>
+                      <span class="text-xs font-bold ${u.is_phishing ? 'text-rose-400' : 'text-emerald-400'}">${u.verdict} (${u.risk_score}/100)</span>
+                    </div>
+                  `;
+                });
+              }
+            }
+          } catch (err) {
+            alert("Email Scan Error: " + err.message);
+          } finally {
+            emailScanBtn.textContent = "Analyze Email";
+            emailScanBtn.disabled = false;
+          }
+        });
+      }
+
+      // 5. HTML Scan
+      const htmlScanBtn = document.getElementById("html-scan-btn");
+      if (htmlScanBtn) {
+        htmlScanBtn.addEventListener("click", async () => {
+          const html_content = (document.getElementById("html-content")?.value || "").trim();
+          const base_url = (document.getElementById("html-base-url")?.value || "").trim();
+          if (!html_content) return;
+
+          htmlScanBtn.textContent = "Inspecting...";
+          htmlScanBtn.disabled = true;
+
+          try {
+            const res = await scanHTML(html_content, base_url);
+            document.getElementById("html-result-box")?.classList.remove("hidden");
+            document.getElementById("html-verdict-badge").innerHTML = renderVerdictBadge(res.verdict);
+            document.getElementById("html-risk-score").textContent = `${res.risk_score}/100`;
+            document.getElementById("html-explanation").textContent = res.explanation;
+
+            const flagsContainer = document.getElementById("html-flags-list");
+            if (flagsContainer) {
+              flagsContainer.innerHTML = "";
+              if (!res.flags || res.flags.length === 0) {
+                flagsContainer.innerHTML = `<li class="text-emerald-400">✓ No suspicious HTML anomalies.</li>`;
+              } else {
+                res.flags.forEach(f => {
+                  flagsContainer.innerHTML += `<li class="text-rose-400">⚠️ ${f}</li>`;
+                });
+              }
+            }
+          } catch (err) {
+            alert("HTML Scan Error: " + err.message);
+          } finally {
+            htmlScanBtn.textContent = "Inspect HTML";
+            htmlScanBtn.disabled = false;
+          }
+        });
+      }
+
+      // 6. Image Scan
+      const imageScanBtn = document.getElementById("image-scan-btn");
+      if (imageScanBtn) {
+        imageScanBtn.addEventListener("click", async () => {
+          const fileInput = document.getElementById("image-file-input");
+          if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+            alert("Please choose an image file first.");
+            return;
+          }
+
+          imageScanBtn.textContent = "Analyzing...";
+          imageScanBtn.disabled = true;
+
+          try {
+            const res = await scanImage(fileInput.files[0]);
+            document.getElementById("image-result-box")?.classList.remove("hidden");
+            document.getElementById("image-verdict-badge").innerHTML = renderVerdictBadge(res.verdict);
+            document.getElementById("image-risk-score").textContent = `${res.risk_score}/100`;
+            document.getElementById("image-explanation").textContent = res.explanation;
+
+            const metaContainer = document.getElementById("image-meta");
+            if (metaContainer) {
+              metaContainer.innerHTML = `
+                <div>Filename: <span class="text-slate-200 font-mono">${res.filename}</span></div>
+                <div>Dimensions: <span class="text-slate-200 font-mono">${res.dimensions.width} x ${res.dimensions.height} px</span></div>
+                <div>Color Variance: <span class="text-slate-200 font-mono">${res.color_variance}</span></div>
+              `;
+            }
+          } catch (err) {
+            alert("Image Scan Error: " + err.message);
+          } finally {
+            imageScanBtn.textContent = "Analyze Image";
+            imageScanBtn.disabled = false;
+          }
+        });
+      }
+
+      // 7. Refresh History Button
+      document.getElementById("refresh-history-btn")?.addEventListener("click", loadHistory);
+
+      // Initialize API Health and Background Data
+      init();
+    });
+
+    async function loadStats() {
+      try {
+        const s = await fetchStats();
+        const statTotal = document.getElementById("stat-total");
+        if (statTotal) statTotal.textContent = s.total_scans;
+
+        const statAvg = document.getElementById("stat-avg-score");
+        if (statAvg) statAvg.textContent = s.average_risk_score.toFixed(1);
+
+        const statThreats = document.getElementById("stat-threats");
+        if (statThreats) statThreats.textContent = (s.verdicts.HIGH || 0) + (s.verdicts.CRITICAL || 0);
+
+        const statSafe = document.getElementById("stat-safe");
+        if (statSafe) statSafe.textContent = s.verdicts.LOW || 0;
+
+        const breakdown = document.getElementById("verdict-breakdown-bars");
+        if (breakdown) {
+          breakdown.innerHTML = Object.entries(s.verdicts).map(([v, count]) => `
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">${v}:</span>
+              <span class="font-mono font-bold text-slate-200">${count}</span>
+            </div>
+          `).join("");
+        }
+
+        const topH = document.getElementById("top-heuristics-list");
+        if (topH) {
+          topH.innerHTML = "";
+          if (!s.top_heuristic_flags || s.top_heuristic_flags.length === 0) {
+            topH.innerHTML = "<p class='text-slate-500'>No flags logged yet.</p>";
+          } else {
+            s.top_heuristic_flags.forEach(item => {
+              topH.innerHTML += `
+                <div class="flex justify-between items-center p-1.5 bg-slate-900 rounded">
+                  <span class="truncate max-w-xs">${item.flag}</span>
+                  <span class="font-mono text-sky-400 font-bold ml-2">x${item.count}</span>
+                </div>
+              `;
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load stats:", err);
+      }
+    }
+
+    async function loadMetrics() {
+      try {
+        const mData = await fetchMetrics();
+        const container = document.getElementById("metrics-table-container");
+        if (!container) return;
+
+        const rows = Object.entries(mData.models).map(([name, m]) => `
+          <tr class="border-b border-slate-800 hover:bg-slate-800/40">
+            <td class="py-3 px-4 font-semibold text-slate-200">${name} ${name === mData.champion_model ? "<span class='ml-2 text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded'>CHAMPION</span>" : ""}</td>
+            <td class="py-3 px-4 font-mono text-emerald-400">${(m.accuracy * 100).toFixed(1)}%</td>
+            <td class="py-3 px-4 font-mono text-sky-400">${(m.precision * 100).toFixed(1)}%</td>
+            <td class="py-3 px-4 font-mono text-amber-400">${(m.recall * 100).toFixed(1)}%</td>
+            <td class="py-3 px-4 font-mono text-purple-400">${(m.f1_score * 100).toFixed(1)}%</td>
+            <td class="py-3 px-4 font-mono text-cyan-400">${(m.roc_auc * 100).toFixed(1)}%</td>
+          </tr>
+        `).join("");
+
+        container.innerHTML = `
+          <div class="overflow-x-auto rounded-lg border border-slate-800">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-800/60 text-slate-400 uppercase font-semibold">
+                  <th class="py-3 px-4">Model</th>
+                  <th class="py-3 px-4">Accuracy</th>
+                  <th class="py-3 px-4">Precision</th>
+                  <th class="py-3 px-4">Recall</th>
+                  <th class="py-3 px-4">F1-Score</th>
+                  <th class="py-3 px-4">ROC-AUC</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      } catch (err) {
+        const container = document.getElementById("metrics-table-container");
+        if (container) container.innerHTML = `<p class="text-rose-400 text-xs">Error loading metrics: ${err.message}</p>`;
+      }
+    }
+
+    async function loadHistory() {
+      try {
+        const hist = await fetchScanHistory(25);
+        const container = document.getElementById("history-container");
+        if (!container) return;
+
+        if (hist.length === 0) {
+          container.innerHTML = "<p class='text-slate-500 text-xs'>No scan logs found in database.</p>";
+          return;
+        }
+
+        const rows = hist.map(h => `
+          <tr class="border-b border-slate-800/70 hover:bg-slate-800/30">
+            <td class="py-2.5 px-3 font-mono uppercase text-sky-400">${h.scan_type}</td>
+            <td class="py-2.5 px-3 font-mono text-slate-300 max-w-xs truncate">${h.target}</td>
+            <td class="py-2.5 px-3 font-mono">${h.risk_score}/100</td>
+            <td class="py-2.5 px-3">${renderVerdictBadge(h.verdict)}</td>
+            <td class="py-2.5 px-3 text-slate-400">${(h.scan_timestamp || '').slice(0, 19).replace('T', ' ')}</td>
+          </tr>
+        `).join("");
+
+        container.innerHTML = `
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-800/50 text-slate-400 uppercase font-semibold">
+                <th class="py-2 px-3">Type</th>
+                <th class="py-2 px-3">Target</th>
+                <th class="py-2 px-3">Risk Score</th>
+                <th class="py-2 px-3">Verdict</th>
+                <th class="py-2 px-3">Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      } catch (err) {
+        const container = document.getElementById("history-container");
+        if (container) container.innerHTML = `<p class="text-rose-400 text-xs">Error loading history: ${err.message}</p>`;
+      }
+    }
+
+    async function init() {
+      const statusBadge = document.getElementById("backend-status");
+      try {
+        const health = await fetchHealth();
+        if (statusBadge) {
+          statusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Backend Online`;
+          statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/60 text-emerald-300 border border-emerald-800 text-xs font-semibold";
+        }
+      } catch (err) {
+        if (statusBadge) {
+          statusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-400"></span> Backend Offline`;
+          statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-950/60 text-rose-300 border border-rose-800 text-xs font-semibold";
+        }
+      }
+    }
+  </script>
+</body>
+</html>
